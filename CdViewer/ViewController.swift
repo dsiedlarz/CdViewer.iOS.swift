@@ -1,98 +1,100 @@
-//
-//  ViewController.swift
-//  CdViewer
-//
-//  Created by Użytkownik Gość on 12.10.2017.
-//  Copyright © 2017 Użytkownik Gość. All rights reserved.
-//
-
 import UIKit
 
 class ViewController: UIViewController {
 
     var cdCollection: [CD] = []
     var currentCdIndex: Int = 0
+    var json: [Dictionary<String,Any>] = []
+    var failCount = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.getJsonFromUrl2()
-        // Do any additional setup after loading the view, typically from a nib.
+        self.fetchJson()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
+    @IBOutlet weak var AlbumName: UITextField!
 
     @IBOutlet weak var ArtistName: UITextField!
     
-    func getJsonFromUrl2(){
-        let cdUrl = "https://isebi.net/albums.php";
-
-    var request = URLRequest(url: URL(string: cdUrl)!)
+    @IBOutlet weak var GenreName: UITextField!
     
+    @IBOutlet weak var YearName: UITextField!
     
-    request.httpMethod = "GET"
-    let task = URLSession.shared.dataTask(with: request) { data, response, error in
-        guard let data = data, error == nil else {                                                 // check for fundamental networking error
-            print("error=\(String(describing: error))")
-            return
-        }
-        
-        if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {           // check for http errors
-            print("statusCode should be 200, but is \(httpStatus.statusCode)")
-            print("response = \(String(describing: response))")
-        }
-        
-        let responseString = String(data: data, encoding: .utf8)
-        print("responseString = \(String(describing: responseString!))")
-    }
-    task.resume()
-    }
+    @IBOutlet weak var TrackCount: UITextField!
     
-    func getJsonFromUrl3(){
-        let cdUrl = "https://isebi.net/albums.php";
+    @IBOutlet weak var IndexInfo: UITextField!
+    
+    @IBOutlet weak var PreviousButton: UIButton!
+    
+    @IBOutlet weak var NextButton: UIButton!
+    
+    func fetchJson(){
+        let url = URL(string:"https://isebi.net/albums.php");
         
-        guard let url = URL(string: cdUrl) else {
-            print("Error: cannot create URL")
-            let error = BackendError.urlError(reason: "Could not construct URL")
-            return
-        }
-        let urlRequest = URLRequest(url: url)
-        
-        // Make request
-        let session = URLSession.shared
-        let task = session.dataTask(with: urlRequest, completionHandler: {
+        let task = URLSession.shared.dataTask(with: url!){
             (data, response, error) in
-            // handle response to request
-            // check for error
-            guard error == nil else {
-                print("Error: did not receive data")
-                return
-            }
-            // make sure we got data in the response
-            guard let responseData = data else {
-                print("Error: did not receive data")
-    
-                return
+           
+            let json = (try! JSONSerialization.jsonObject(with: data!, options: []) as? [Dictionary<String,Any>])
+            self.json = json != nil ? json! : []
+            
+            if (json == nil && self.failCount < 3) {
+                self.failCount = self.failCount + 1
+                self.fetchJson()
             }
             
-            // parse the result as JSON
-            // then create a Todo from the JSON
-            do {
-                if let todoJSON = try JSONSerialization.jsonObject(with: responseData, options: []) as [String: Any] {
-                    var todo = CD(json: todoJSON)
-                    // created a TODO object
-                //https://grokswift.com/json-swift-4/
-                    print("success")
-                
-            } catch {
-                // error trying to convert the data to JSON using JSONSerialization.jsonObject
-                return
+            self.cdCollection = self.parseCollection(json: self.json)
+            DispatchQueue.main.async {
+                self.updateScreen()
             }
-        })
+        }
+        
         task.resume()
     }
     
+    func parseCollection(json: [Dictionary<String,Any>]) -> [CD] {
+        var collection:[CD] = [];
+        for element in json {
+            print(element)
+            collection.append(CD(json:element))
+        }
+        return collection
+    }
+    
+    func updateScreen(){
+        var cd: CD
+        if (self.currentCdIndex == self.cdCollection.count) {
+            cd = CD()
+            self.IndexInfo.text = "Nowy rekord"
+        } else {
+            cd = self.cdCollection[self.currentCdIndex]
+            self.IndexInfo.text = "Rekord \(self.currentCdIndex + 1) z \(self.cdCollection.count)"
+        }
+        
+        self.AlbumName.text = cd.album
+        self.ArtistName.text = cd.artist
+        self.GenreName.text = cd.genre
+        self.YearName.text = cd.year
+        self.TrackCount.text = cd.tracks
+        
+        self.PreviousButton.isEnabled = self.currentCdIndex != 0
+        self.NextButton.isEnabled = self.currentCdIndex != self.cdCollection.count
+    }
+    
+    @IBAction func NextAction(_ sender: Any) {
+        if (self.currentCdIndex < (self.cdCollection.count)){
+            self.currentCdIndex = self.currentCdIndex + 1
+            self.updateScreen()
+        }
+    }
+    
+    @IBAction func PreviousAction(_ sender: Any) {
+        if (self.currentCdIndex > 0){
+            self.currentCdIndex = self.currentCdIndex - 1
+            self.updateScreen()
+        }
+    }
 }
 
