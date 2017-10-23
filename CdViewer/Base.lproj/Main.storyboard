@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1611" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13178.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13156.2"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -103,23 +103,32 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Poprzedni"/>
                                 <connections>
-                                    <action selector="PreviousAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YHG-2M-wxO"/>
+                                    <action selector="previousAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WLd-Kc-bRM"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rdw-1R-8bS">
                                 <rect key="frame" x="33" y="617" width="36" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Usuń"/>
+                                <connections>
+                                    <action selector="deleteAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YMN-IG-QTe"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sx4-Fb-CDd">
                                 <rect key="frame" x="168" y="617" width="39" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Nowy"/>
+                                <connections>
+                                    <action selector="newAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eeB-Jk-vN2"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ule-fQ-Zwe">
-                                <rect key="frame" x="313" y="617" width="46" height="30"/>
+                                <rect key="frame" x="313" y="618" width="46" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Zapisz"/>
+                                <connections>
+                                    <action selector="saveAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iNi-6O-LiA"/>
+                                </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Rekord X z Y" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="t5N-O1-Zvp">
                                 <rect key="frame" x="117" y="568" width="141" height="30"/>
@@ -133,7 +142,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Następny"/>
                                 <connections>
-                                    <action selector="NextAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vWV-H5-E7Z"/>
+                                    <action selector="nextAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PHA-NQ-aOa"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -146,6 +155,7 @@
                         <outlet property="IndexInfo" destination="t5N-O1-Zvp" id="F7D-UE-LkC"/>
                         <outlet property="NextButton" destination="uOF-l3-HjR" id="VIf-Mn-VBm"/>
                         <outlet property="PreviousButton" destination="zkR-7M-KKv" id="crJ-TU-qDi"/>
+                        <outlet property="SaveButton" destination="ule-fQ-Zwe" id="faa-KE-kGm"/>
                         <outlet property="TrackCount" destination="7ZE-rT-oE0" id="MvI-oe-dqf"/>
                         <outlet property="YearName" destination="NvO-IN-jnq" id="ise-xn-kKa"/>
                     </connections>

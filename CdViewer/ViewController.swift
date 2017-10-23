@@ -7,9 +7,12 @@ class ViewController: UIViewController {
     var json: [Dictionary<String,Any>] = []
     var failCount = 0
     
+    var isEdited: Bool = false;
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.fetchJson()
+        self.initHandleInputChange()
     }
 
     override func didReceiveMemoryWarning() {
@@ -30,6 +33,20 @@ class ViewController: UIViewController {
     @IBOutlet weak var PreviousButton: UIButton!
     
     @IBOutlet weak var NextButton: UIButton!
+    
+    @IBOutlet weak var SaveButton: UIButton!
+    
+    func inputChanged(textField: UITextField) {
+        self.SaveButton.isEnabled = true
+    }
+    
+    func initHandleInputChange() {
+            self.AlbumName.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
+           self.ArtistName.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
+           self.GenreName.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
+           self.YearName.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
+           self.TrackCount.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
+    }
     
     func fetchJson(){
         let url = URL(string:"https://isebi.net/albums.php");
@@ -81,20 +98,44 @@ class ViewController: UIViewController {
         
         self.PreviousButton.isEnabled = self.currentCdIndex != 0
         self.NextButton.isEnabled = self.currentCdIndex != self.cdCollection.count
+        self.SaveButton.isEnabled = false
     }
     
-    @IBAction func NextAction(_ sender: Any) {
+    @IBAction func nextAction(_ sender: Any) {
         if (self.currentCdIndex < (self.cdCollection.count)){
             self.currentCdIndex = self.currentCdIndex + 1
             self.updateScreen()
         }
     }
-    
-    @IBAction func PreviousAction(_ sender: Any) {
+   
+    @IBAction func previousAction(_ sender: Any) {
         if (self.currentCdIndex > 0){
             self.currentCdIndex = self.currentCdIndex - 1
             self.updateScreen()
         }
     }
+    
+    @IBAction func newAction(_ sender: Any) {
+        self.currentCdIndex = self.cdCollection.count
+        self.updateScreen()
+    }
+    
+    @IBAction func deleteAction(_ sender: Any) {
+        self.cdCollection.remove(at: self.currentCdIndex)
+        self.updateScreen()
+    }
+    
+    @IBAction func saveAction(_ sender: Any) {
+        let cd: CD = CD()
+        cd.album = self.AlbumName.text!
+        cd.artist = self.ArtistName.text!
+        cd.genre = self.GenreName.text!
+        cd.year = self.YearName.text!
+        cd.tracks = self.TrackCount.text!
+        
+        self.cdCollection.insert(cd, at: self.currentCdIndex)
+        self.updateScreen()
+    }
+    
 }
 
