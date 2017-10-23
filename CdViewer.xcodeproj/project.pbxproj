@@ -35,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A078DE521F9EB864000FDE21 /* back.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = back.jpg; path = ../../Downloads/back.jpg; sourceTree = "<group>"; };
 		ACD995881F8F3F58002EF8D7 /* CdViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CdViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACD9958B1F8F3F59002EF8D7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ACD9958D1F8F3F59002EF8D7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +100,7 @@
 		ACD9958A1F8F3F58002EF8D7 /* CdViewer */ = {
 			isa = PBXGroup;
 			children = (
+				A078DE521F9EB864000FDE21 /* back.jpg */,
 				ACD9958B1F8F3F59002EF8D7 /* AppDelegate.swift */,
 				ACD9958D1F8F3F59002EF8D7 /* ViewController.swift */,
 				ACD9958F1F8F3F59002EF8D7 /* Main.storyboard */,
@@ -509,6 +511,7 @@
 				ACD995B21F8F3F59002EF8D7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		ACD995B31F8F3F59002EF8D7 /* Build configuration list for PBXNativeTarget "CdViewerTests" */ = {
 			isa = XCConfigurationList;
@@ -517,6 +520,7 @@
 				ACD995B51F8F3F59002EF8D7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		ACD995B61F8F3F59002EF8D7 /* Build configuration list for PBXNativeTarget "CdViewerUITests" */ = {
 			isa = XCConfigurationList;
@@ -525,6 +529,7 @@
 				ACD995B81F8F3F59002EF8D7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

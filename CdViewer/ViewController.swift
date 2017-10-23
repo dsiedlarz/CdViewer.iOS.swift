@@ -74,7 +74,6 @@ class ViewController: UIViewController {
     func parseCollection(json: [Dictionary<String,Any>]) -> [CD] {
         var collection:[CD] = [];
         for element in json {
-            print(element)
             collection.append(CD(json:element))
         }
         return collection
