@@ -36,6 +36,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var SaveButton: UIButton!
     
+    @IBOutlet weak var DeleteButton: UIButton!
     func inputChanged(textField: UITextField) {
         self.SaveButton.isEnabled = true
     }
@@ -98,6 +99,12 @@ class ViewController: UIViewController {
         self.PreviousButton.isEnabled = self.currentCdIndex != 0
         self.NextButton.isEnabled = self.currentCdIndex != self.cdCollection.count
         self.SaveButton.isEnabled = false
+        
+        if (self.cdCollection.count > 0 && self.currentCdIndex < self.cdCollection.count) {
+            self.DeleteButton.isEnabled = true
+        } else {
+            self.DeleteButton.isEnabled = false
+        }
     }
     
     @IBAction func nextAction(_ sender: Any) {
@@ -120,8 +127,10 @@ class ViewController: UIViewController {
     }
     
     @IBAction func deleteAction(_ sender: Any) {
-        self.cdCollection.remove(at: self.currentCdIndex)
-        self.updateScreen()
+        if (self.cdCollection.count > 0 && self.currentCdIndex < self.cdCollection.count) {
+            self.cdCollection.remove(at: self.currentCdIndex)
+            self.updateScreen()
+        }
     }
     
     @IBAction func saveAction(_ sender: Any) {
@@ -134,6 +143,10 @@ class ViewController: UIViewController {
         
         self.cdCollection.insert(cd, at: self.currentCdIndex)
         self.updateScreen()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true) //This will hide the keyboard
     }
     
 }
