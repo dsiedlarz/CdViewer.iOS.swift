@@ -1,25 +1,29 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     var cdCollection: [CD] = []
     var currentCdIndex: Int = 0
     var json: [Dictionary<String,Any>] = []
     var failCount = 0
+    var myFilePath: String? = nil
+    
     
     var isEdited: Bool = false;
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let dirPaths =  NSSearchPathForDirectoriesInDomains  (.documentDirectory, .userDomainMask, true)
+        myFilePath = dirPaths.first! + "/" + "mydb"
         self.fetchJson()
         self.initHandleInputChange()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     @IBOutlet weak var AlbumName: UITextField!
-
+    
     @IBOutlet weak var ArtistName: UITextField!
     
     @IBOutlet weak var GenreName: UITextField!
@@ -42,34 +46,49 @@ class ViewController: UIViewController {
     }
     
     func initHandleInputChange() {
-            self.AlbumName.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
-           self.ArtistName.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
-           self.GenreName.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
-           self.YearName.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
-           self.TrackCount.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
+        self.AlbumName.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
+        self.ArtistName.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
+        self.GenreName.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
+        self.YearName.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
+        self.TrackCount.addTarget(self, action: #selector(inputChanged(textField:)), for: .editingChanged)
+    }
+    
+    func saveCdCollectionToCache() {
+        NSKeyedArchiver.archiveRootObject(self.cdCollection,
+                                          toFile: self.myFilePath!)
     }
     
     func fetchJson(){
         let url = URL(string:"https://isebi.net/albums.php");
         
-        let task = URLSession.shared.dataTask(with: url!){
-            (data, response, error) in
-           
-            let json = (try! JSONSerialization.jsonObject(with: data!, options: []) as? [Dictionary<String,Any>])
-            self.json = json != nil ? json! : []
-            
-            if (json == nil && self.failCount < 3) {
-                self.failCount = self.failCount + 1
-                self.fetchJson()
-            }
-            
-            self.cdCollection = self.parseCollection(json: self.json)
+        let tmp = NSKeyedUnarchiver.unarchiveObject(withFile: self.myFilePath!)
+        if (tmp != nil) {
+            self.cdCollection = tmp as! [CD]
             DispatchQueue.main.async {
                 self.updateScreen()
             }
+            
+        } else {
+            let task = URLSession.shared.dataTask(with: url!){
+                (data, response, error) in
+                
+                let json = (try! JSONSerialization.jsonObject(with: data!, options: []) as? [Dictionary<String,Any>])
+                self.json = json != nil ? json! : []
+                
+                if (json == nil && self.failCount < 3) {
+                    self.failCount = self.failCount + 1
+                    self.fetchJson()
+                }
+                
+                self.cdCollection = self.parseCollection(json: self.json)
+                DispatchQueue.main.async {
+                    self.updateScreen()
+                }
+                self.saveCdCollectionToCache()
+            }
+            
+            task.resume()
         }
-        
-        task.resume()
     }
     
     func parseCollection(json: [Dictionary<String,Any>]) -> [CD] {
@@ -113,7 +132,7 @@ class ViewController: UIViewController {
             self.updateScreen()
         }
     }
-   
+    
     @IBAction func previousAction(_ sender: Any) {
         if (self.currentCdIndex > 0){
             self.currentCdIndex = self.currentCdIndex - 1
@@ -143,11 +162,11 @@ class ViewController: UIViewController {
         
         self.cdCollection.insert(cd, at: self.currentCdIndex)
         self.updateScreen()
+        self.saveCdCollectionToCache()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true) //This will hide the keyboard
     }
-    
 }
 
